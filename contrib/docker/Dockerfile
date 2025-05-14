@@ -21,9 +21,8 @@ COPY --from=source-deps --link ["/", "/usr/local/src/weather-web/"]
 
 RUN --mount=type=cache,target=/root/.bun bun install --cwd "/usr/local/src/weather-web/"
 
-FROM --platform=$BUILDPLATFORM docker.io/oven/bun:1.2.13-alpine@sha256:3476c857e7c05a7950b3a8a684ffbc82f5cbeffe1b523ea1a92bdefc4539dc57 AS builder
+FROM deps AS builder
 
-COPY --from=deps --link ["/usr/local/src/weather-web/", "/usr/local/src/weather-web/"]
 COPY --from=source-code --link ["/", "/usr/local/src/weather-web/"]
 
 RUN --mount=type=cache,target=/root/.bun bun run --cwd "/usr/local/src/weather-web/" build
