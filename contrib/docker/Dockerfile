@@ -35,6 +35,8 @@ COPY --from=builder --link ["/usr/local/src/weather-web/build/", "/srv/"]
 ENTRYPOINT ["bun"]
 CMD ["/srv/index.js"]
 
+HEALTHCHECK --interval=10s --retries=3 --start-period=10s --timeout=5s CMD [ "wget", "--spider", "--tries=1", "http://localhost:3000/-/healthy" ]
+
 ARG CREATED
 ARG REVISION
 ARG VERSION
