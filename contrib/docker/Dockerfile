@@ -11,6 +11,7 @@ FROM scratch AS source-code
 COPY --link ["./src/", "./src/"]
 COPY --link ["./static/", "./static/"]
 COPY --link ["./.npmrc", "./.npmrc"]
+COPY --link ["./openapi-ts.config.ts", "./openapi-ts.config.ts"]
 COPY --link ["./svelte.config.js", "./svelte.config.js"]
 COPY --link ["./tsconfig.json", "./tsconfig.json"]
 COPY --link ["./vite.config.ts", "./vite.config.ts"]
@@ -25,7 +26,10 @@ FROM deps AS builder
 
 COPY --from=source-code --link ["/", "/usr/local/src/weather-web/"]
 
-RUN --mount=type=cache,target=/root/.bun bun run --cwd "/usr/local/src/weather-web/" build
+RUN --mount=type=cache,target=/root/.bun <<EOF
+  bun run --cwd "/usr/local/src/weather-web/" openapi-ts
+  bun run --cwd "/usr/local/src/weather-web/" build
+EOF
 
 FROM docker.io/oven/bun:1.2.13-alpine@sha256:3476c857e7c05a7950b3a8a684ffbc82f5cbeffe1b523ea1a92bdefc4539dc57 AS runner
 

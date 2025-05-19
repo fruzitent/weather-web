@@ -9,6 +9,7 @@ Requirements:
 - [Bun](https://bun.sh/docs/installation) runtime
 
 ```shell
+bun run openapi-ts
 bun run build
 ```
 
